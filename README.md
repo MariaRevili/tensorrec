@@ -3,7 +3,7 @@ A TensorFlow recommendation algorithm and framework in Python.
 
 [![PyPI version](https://badge.fury.io/py/tensorrec.svg)](https://badge.fury.io/py/tensorrec) [![Build Status](https://travis-ci.org/jfkirk/tensorrec.svg?branch=master)](https://travis-ci.org/jfkirk/tensorrec) [![Gitter chat](https://badges.gitter.im/tensorrec/gitter.png)](https://gitter.im/tensorrec)
 
-## NOTE: Adjusted code for TensorFlow 2.0 and higher
+## NOTE: Updated code for TensorFlow 2.0 and higher
 
 TensorRec will not be receiving any more planned updates. Please feel free to open pull requests -- I am happy to review them.
 
