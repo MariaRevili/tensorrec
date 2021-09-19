@@ -1,5 +1,6 @@
 import abc
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 
 
 class AbstractRepresentationGraph(object):
@@ -32,12 +33,12 @@ class LinearRepresentationGraph(AbstractRepresentationGraph):
     def connect_representation_graph(self, tf_features, n_components, n_features, node_name_ending):
 
         # Weights are normalized before building the variable
-        raw_weights = tf.random_normal([n_features, n_components], stddev=1.0)
+        raw_weights = tf.random.normal([n_features, n_components], stddev=1.0)
         normalized_weights = tf.nn.l2_normalize(raw_weights, 1)
 
         # Create variable nodes
         tf_linear_weights = tf.Variable(normalized_weights, name='linear_weights_{}'.format(node_name_ending))
-        tf_repr = tf.sparse_tensor_dense_matmul(tf_features, tf_linear_weights)
+        tf_repr = tf.compat.v1.sparse_tensor_dense_matmul(tf_features, tf_linear_weights)
 
         # Return repr layer and variables
         return tf_repr, [tf_linear_weights]

@@ -176,7 +176,7 @@ class WMRBLossGraph(AbstractLossGraph):
         # [ n_positive_interactions ]
         sampled_margin_rank = (n_items / n_sampled_items) * tf.reduce_sum(summation_term, axis=1)
 
-        loss = tf.log(sampled_margin_rank + 1.0)
+        loss = tf.math.log(sampled_margin_rank + 1.0)
         return loss
 
 

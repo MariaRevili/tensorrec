@@ -12,7 +12,7 @@ def create_tensorrec_iterator(name):
     The name for this Iterator.
     :return: tf.data.Iterator
     """
-    return tf.data.Iterator.from_structure(
+    return tf.compat.v1.data.Iterator.from_structure(
             output_types=(tf.int64, tf.int64, tf.float32, tf.int64, tf.int64),
             output_shapes=([None], [None], [None], [], []),
             shared_name=name

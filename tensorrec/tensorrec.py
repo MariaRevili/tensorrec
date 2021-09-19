@@ -6,6 +6,8 @@ import os
 import pickle
 from scipy import sparse as sp
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
+
 
 from .errors import (
     ModelNotBiasedException, ModelNotFitException, ModelWithoutAttentionException, BatchNonSparseInputException,
@@ -270,10 +272,10 @@ class TensorRec(object):
     def _build_tf_graph(self, n_user_features, n_item_features):
 
         # Build placeholders
-        self.tf_n_sampled_items = tf.placeholder('int64')
-        self.tf_similar_items_ids = tf.placeholder('int64', [None])
-        self.tf_learning_rate = tf.placeholder('float', None)
-        self.tf_alpha = tf.placeholder('float', None)
+        self.tf_n_sampled_items = tf.compat.v1.placeholder('int64')
+        self.tf_similar_items_ids = tf.compat.v1.placeholder('int64', [None])
+        self.tf_learning_rate = tf.compat.v1.placeholder('float', None)
+        self.tf_alpha = tf.compat.v1.placeholder('float', None)
 
         tf_user_feature_rows, tf_user_feature_cols, tf_user_feature_values, tf_n_users, _ = \
             self.tf_user_feature_iterator.get_next()
@@ -296,7 +298,7 @@ class TensorRec(object):
 
         # Construct the sampling py_func
         sample_items_partial = partial(sample_items, replace=self.loss_graph_factory.is_sampled_with_replacement)
-        self.tf_sample_indices = tf.py_func(func=sample_items_partial,
+        self.tf_sample_indices = tf.compat.v1.py_func(func=sample_items_partial,
                                             inp=[tf_n_items, tf_n_users, self.tf_n_sampled_items],
                                             Tout=tf.int64)
         self.tf_sample_indices.set_shape([None, None])
@@ -486,7 +488,7 @@ class TensorRec(object):
 
         self.tf_weight_reg_loss = sum(tf.nn.l2_loss(weights) for weights in tf_weights)
         self.tf_loss = self.tf_basic_loss + (self.tf_alpha * self.tf_weight_reg_loss)
-        self.tf_optimizer = tf.train.AdamOptimizer(learning_rate=self.tf_learning_rate).minimize(self.tf_loss)
+        self.tf_optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=self.tf_learning_rate).minimize(self.tf_loss)
 
         # Record the new node names
         self._record_graph_hook_names()
@@ -603,7 +605,7 @@ class TensorRec(object):
             # Numbers of features are either learned at fit time from the shape of these two matrices or specified at
             # TensorRec construction and cannot be changed.
             self._build_tf_graph(n_user_features=n_user_features, n_item_features=n_item_features)
-            session.run(tf.global_variables_initializer())
+            session.run(tf.compat.v1.global_variables_initializer())
 
         # Build the shared feed dict
         feed_dict = {self.tf_learning_rate: learning_rate,
